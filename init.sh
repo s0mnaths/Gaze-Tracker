@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo Setting up environment
+module load python/3.8
+module load httpproxy
+
+pwd
+
+virtualenv ./tensorflow-test
+source ./tensorflow-test/bin/activate 
+pwd
+echo Installing TF
+pip install --no-index tensorflow numpy matplotlib pillow comet_ml
