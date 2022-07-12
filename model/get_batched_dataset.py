@@ -4,10 +4,6 @@ from create_tfrec import parse_tfrecord_fn
 
 AUTO = tf.data.experimental.AUTOTUNE # used in tf.data.Dataset API
 
-TRAINING_FILENAMES = '../datasets/gazetrack_tfrec/train.tfrec'
-VALID_FILENAMES = '../datasets/gazetrack_tfrec/val.tfrec'
-TEST_FILENAMES = '../datasets/gazetrack_tfrec/test.tfrec'
-BATCH_SIZE = 256
 
 def augmentation(image, training = True):
     if training:
@@ -88,17 +84,31 @@ def get_batched_dataset(filenames, batch_size):
         .prefetch(buffer_size=AUTO)
     )
     
+    dataset_len = sum(1 for _ in tf.data.TFRecordDataset(filenames))
+    print(f"No. of samples: {dataset_len}")
+    
     return dataset
+
+
+
+
+
+# Call in main.py
+
+TRAINING_FILENAMES = '../datasets/gazetrack_tfrec/train.tfrec'
+VALID_FILENAMES = '../datasets/gazetrack_tfrec/val.tfrec'
+TEST_FILENAMES = '../datasets/gazetrack_tfrec/test.tfrec'
+# BATCH_SIZE = 256
 
 
 train_dataset = get_batched_dataset(TRAINING_FILENAMES, BATCH_SIZE)
 valid_dataset = get_batched_dataset(VALID_FILENAMES, BATCH_SIZE)
 test_dataset = get_batched_dataset(TEST_FILENAMES, BATCH_SIZE)
 
-train_len = sum(1 for _ in tf.data.TFRecordDataset(TRAINING_FILENAMES))
-val_len = sum(1 for _ in tf.data.TFRecordDataset(VALID_FILENAMES))
-test_len = sum(1 for _ in tf.data.TFRecordDataset(TEST_FILENAMES))
+# train_len = sum(1 for _ in tf.data.TFRecordDataset(TRAINING_FILENAMES))
+# val_len = sum(1 for _ in tf.data.TFRecordDataset(VALID_FILENAMES))
+# test_len = sum(1 for _ in tf.data.TFRecordDataset(TEST_FILENAMES))
 
-print(f"No. of train samples: {train_len}")
-print(f"No. of val samples: {val_len}")
-print(f"No. of test samples: {test_len}")
+# print(f"No. of train samples: {train_len}")
+# print(f"No. of val samples: {val_len}")
+# print(f"No. of test samples: {test_len}")
