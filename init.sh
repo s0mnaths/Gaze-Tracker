@@ -10,4 +10,4 @@ virtualenv ./tensorflow-test
 source ./tensorflow-test/bin/activate 
 pwd
 echo Installing TF
-pip install --no-index tensorflow numpy matplotlib pillow comet_ml
+pip install --no-index tensorflow numpy matplotlib pillow comet_ml tqdm
