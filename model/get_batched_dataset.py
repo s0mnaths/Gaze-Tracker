@@ -2,9 +2,10 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from create_tfrec import parse_tfrecord_fn
 
-AUTO = tf.data.experimental.AUTOTUNE # used in tf.data.Dataset API
+AUTO = tf.data.experimental.AUTOTUNE 
 
 
+## Augmentations and Transforms
 def augmentation(image, training = True):
     if training:
         aug = tf.keras.Sequential([
@@ -26,51 +27,86 @@ def augmentation(image, training = True):
     return image
 
 
-def prepare_sample(features):
-    image = features['image']
-    w = tf.shape(image)[0]
-    h = tf.shape(image)[1]
-    
+## Data preprocessing
+def prepare_fit_sample(features):
+    img_feat = features['image']
+
+    h = tf.shape(img_feat)[0]
+    w = tf.shape(img_feat)[1]
+
     w = tf.cast(w, tf.int64)
     h = tf.cast(h, tf.int64)
-    
+
     screen_w, screen_h = features['screen_w'], features['screen_h']
-    
+
     kps = [features['leye_x1']/w, features['leye_y1']/h, features['leye_x2']/w, features['leye_y2']/h,
            features['reye_x1']/w, features['reye_y1']/h, features['reye_x2']/w, features['reye_y2']/h]
     # kps has type float64
-    
 
-    lx, ly, lw, lh = features['leye_x'], features['leye_y'], features['leye_w'], features['leye_h']
-    rx, ry, rw, rh = features['reye_x'], features['reye_y'], features['reye_w'], features['reye_h']
-    
-    lx = tf.cast(lx, tf.int32)
-    ly = tf.cast(ly, tf.int32)
-    lw = tf.cast(lw, tf.int32)
-    lh = tf.cast(lh, tf.int32)
-    
-    rx = tf.cast(rx, tf.int32)
-    ry = tf.cast(ry, tf.int32)
-    rw = tf.cast(rw, tf.int32)
-    rh = tf.cast(rh, tf.int32)
-    
-    l_eye = tf.image.crop_to_bounding_box(image, ly, lx, lh, lw)  
-    r_eye = tf.image.crop_to_bounding_box(image, ry, rx, rh, rw)
-    
+    lx, ly, lw, lh = int(features['leye_x']), int(features['leye_y']), int(features['leye_w']), int(features['leye_h'])
+    rx, ry, rw, rh = int(features['reye_x']), int(features['reye_y']), int(features['reye_w']), int(features['reye_h'])
+
+    lx = tf.clip_by_value(lx, 0, int(w)-lw)
+    ly = tf.clip_by_value(ly, 0, int(h)-lh)
+
+    rx = tf.clip_by_value(rx, 0, int(w)-rw)
+    ry = tf.clip_by_value(ry, 0, int(h)-rh)
+
+    l_eye = tf.image.crop_to_bounding_box(img_feat, ly, lx, lh, lw)
+    r_eye = tf.image.crop_to_bounding_box(img_feat, ry, rx, rh, rw)
+
     l_eye = tf.image.flip_left_right(l_eye)
-    
-    out = [features['dot_xcam'], features['dot_y_cam']]
-    # out has type float32
-    
+
     l_eye = augmentation(l_eye)
     r_eye = augmentation(r_eye)
-    
-    
-    return l_eye, r_eye, kps, out, screen_w, screen_h
+
+    y = [features['dot_xcam'], features['dot_y_cam']]
+    # y has type float32
+
+    return (l_eye, r_eye, kps), y
+
+
+def prepare_eval_sample(features):
+    img_feat = features['image']
+
+    h = tf.shape(img_feat)[0]
+    w = tf.shape(img_feat)[1]
+
+    w = tf.cast(w, tf.int64)
+    h = tf.cast(h, tf.int64)
+
+    screen_w, screen_h = features['screen_w'], features['screen_h']
+
+    kps = [features['leye_x1']/w, features['leye_y1']/h, features['leye_x2']/w, features['leye_y2']/h,
+           features['reye_x1']/w, features['reye_y1']/h, features['reye_x2']/w, features['reye_y2']/h]
+    # kps has type float64
+
+    lx, ly, lw, lh = int(features['leye_x']), int(features['leye_y']), int(features['leye_w']), int(features['leye_h'])
+    rx, ry, rw, rh = int(features['reye_x']), int(features['reye_y']), int(features['reye_w']), int(features['reye_h'])
+
+    lx = tf.clip_by_value(lx, 0, int(w)-lw)
+    ly = tf.clip_by_value(ly, 0, int(h)-lh)
+
+    rx = tf.clip_by_value(rx, 0, int(w)-rw)
+    ry = tf.clip_by_value(ry, 0, int(h)-rh)
+
+    l_eye = tf.image.crop_to_bounding_box(img_feat, ly, lx, lh, lw)
+    r_eye = tf.image.crop_to_bounding_box(img_feat, ry, rx, rh, rw)
+
+    l_eye = tf.image.flip_left_right(l_eye)
+
+    l_eye = augmentation(l_eye, False)
+    r_eye = augmentation(r_eye, False)
+
+    y = [features['dot_xcam'], features['dot_y_cam']]
+    # y has type float32
+
+    return (l_eye, r_eye, kps), y
 
 
 
-def get_batched_dataset(filenames, batch_size):
+## Creating TF dataloader
+def get_fit_dataset(filenames, batch_size):
     option_no_order = tf.data.Options()
     option_no_order.deterministic = False  # disable order, increase speed
     
@@ -78,37 +114,27 @@ def get_batched_dataset(filenames, batch_size):
         tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
         .with_options(option_no_order)
         .map(parse_tfrecord_fn, num_parallel_calls=AUTO)
-        .map(prepare_sample, num_parallel_calls=AUTO)
+        .map(prepare_fit_sample, num_parallel_calls=AUTO)
         .shuffle(batch_size*10)
         .batch(batch_size)
         .prefetch(buffer_size=AUTO)
     )
     
-    dataset_len = sum(1 for _ in tf.data.TFRecordDataset(filenames))
-    print(f"No. of samples: {dataset_len}")
-    
     return dataset
 
 
-
-
-
-# Call in main.py
-
-TRAINING_FILENAMES = '../datasets/gazetrack_tfrec/train.tfrec'
-VALID_FILENAMES = '../datasets/gazetrack_tfrec/val.tfrec'
-TEST_FILENAMES = '../datasets/gazetrack_tfrec/test.tfrec'
-# BATCH_SIZE = 256
-
-
-train_dataset = get_batched_dataset(TRAINING_FILENAMES, BATCH_SIZE)
-valid_dataset = get_batched_dataset(VALID_FILENAMES, BATCH_SIZE)
-test_dataset = get_batched_dataset(TEST_FILENAMES, BATCH_SIZE)
-
-# train_len = sum(1 for _ in tf.data.TFRecordDataset(TRAINING_FILENAMES))
-# val_len = sum(1 for _ in tf.data.TFRecordDataset(VALID_FILENAMES))
-# test_len = sum(1 for _ in tf.data.TFRecordDataset(TEST_FILENAMES))
-
-# print(f"No. of train samples: {train_len}")
-# print(f"No. of val samples: {val_len}")
-# print(f"No. of test samples: {test_len}")
+def get_eval_dataset(filenames, batch_size):
+    option_no_order = tf.data.Options()
+    option_no_order.deterministic = False  # disable order, increase speed
+    
+    dataset = (
+        tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
+        .with_options(option_no_order)
+        .map(parse_tfrecord_fn, num_parallel_calls=AUTO)
+        .map(prepare_eval_sample, num_parallel_calls=AUTO)
+        .shuffle(batch_size*10)
+        .batch(batch_size)
+        .prefetch(buffer_size=AUTO)
+    )
+    
+    return dataset

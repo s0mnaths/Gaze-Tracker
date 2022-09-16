@@ -21,9 +21,9 @@ parser.add_argument('--checkpoint', default=None, help='Path to load pre-trained
 if __name__ == '__main__':
     
     print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-    physical_devices = tf.config.list_physical_devices('GPU')
-    for device in physical_devices:
-        tf.config.experimental.set_memory_growth(device, True)
+    # physical_devices = tf.config.list_physical_devices('GPU')
+    # for device in physical_devices:
+    #     tf.config.experimental.set_memory_growth(device, True)
 
     print('->no. of gpus printed')
     
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     print('->datasets created')
     
-    save_ckpt = tf.keras.callbacks.ModelCheckpoint(filepath=args.save_dir+'model--{epoch:02d}-{val_loss:.3f}', save_format='tf') 
+    save_ckpt = tf.keras.callbacks.ModelCheckpoint(filepath=args.save_dir+'model--{epoch:02d}-{val_loss:.3f}.h5') 
 
     
     model = gazetrack_model()
