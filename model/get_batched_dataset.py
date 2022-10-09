@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import layers
-from create_tfrec import parse_tfrecord_fn
+from parse_tfrec_fns import parse_tfrecord_fn
 
 AUTO = tf.data.experimental.AUTOTUNE 
 
@@ -17,7 +17,7 @@ def augmentation(image, training = True):
         
     else:
         aug = tf.keras.Sequential([
-                layers.Resizing(128+10, 128+10),
+                layers.Resizing(128, 128),
                 layers.Rescaling(1./255),
                 layers.Normalization(mean = (0.3741, 0.4076, 0.5425), variance = (0.0004, 0.0004, 0.0004))
                 ])

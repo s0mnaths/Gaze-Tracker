@@ -11,10 +11,10 @@ source ./tensorflow-test/bin/activate
 pwd
 
 echo Installing TF
-pip install --no-index comet-ml tensorflow numpy matplotlib pillow tqdm pandas
+pip install --no-index comet-ml tensorflow numpy matplotlib pillow tqdm pandas scikit-learn
 
 
 echo installed!
-python comet-test.py
+
 
 echo DONE!

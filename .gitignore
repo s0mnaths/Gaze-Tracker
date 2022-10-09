@@ -161,5 +161,4 @@ cython_debug/
 
 
 # Folders
-datasets/
-shared/
+

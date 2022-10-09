@@ -2,10 +2,15 @@ import tensorflow as tf
 import json
 import os 
 
+import argparse
+
+parser = argparse.ArgumentParser(description='create invid tfrecs')
+parser.add_argument('--filename', default='', help='Path to TFRecord')
+
+args = parser.parse_args()
 
 PATH_MAIN = './' #path where the gazetrack data is unzipped 
-TFREC_PARENT_PATH = '/home/s0mnaths/projects/def-skrishna/s0mnaths/datasets/google_split_tfrec/' #path parent path to save the tfrec folder
-
+TFREC_PARENT_PATH = '/home/s0mnaths/projects/def-skrishna/s0mnaths/datasets/Users_google_tfrec/' #path parent path to save the tfrec folder
 
 
 def image_feature(value):
@@ -110,26 +115,47 @@ def parse_tfrecord_fn(example):
 
 
 
-path_distinct = []
-for x in sorted(os.listdir(PATH_MAIN)):
-    path_distinct.append(x)
+# path_distinct = []
+# for x in sorted(os.listdir(PATH_MAIN)):
+#     path_distinct.append(x)
     
-path_test = PATH_MAIN + path_distinct[1]
-path_train = PATH_MAIN + path_distinct[2]
-path_val = PATH_MAIN + path_distinct[3]
+# path_test = PATH_MAIN + path_distinct[1]
+# path_train = PATH_MAIN + path_distinct[2]
+# path_val = PATH_MAIN + path_distinct[3]
 
-paths_diff = [path_test,path_train,path_val]
-
-
-tfrec_paths = [TFREC_PARENT_PATH + 'test.tfrec', TFREC_PARENT_PATH + 'train.tfrec', TFREC_PARENT_PATH + 'val.tfrec']
+# paths_diff = [path_test,path_train,path_val]
 
 
+# tfrec_paths = [TFREC_PARENT_PATH + 'test.tfrec', TFREC_PARENT_PATH + 'train.tfrec', TFREC_PARENT_PATH + 'val.tfrec']
 
-for i,x in enumerate(paths_diff):
-    x_img = x+ '/images'
-    x_json = x+'/meta'
-    with tf.io.TFRecordWriter(tfrec_paths[i]) as writer:
-        for y in sorted(os.listdir(x_img)):
+
+
+# for i,x in enumerate(paths_diff):
+#     x_img = x+ '/images'
+#     x_json = x+'/meta'
+#     with tf.io.TFRecordWriter(tfrec_paths[i]) as writer:
+#         for y in sorted(os.listdir(x_img)):
+#             temp_path = x_img+'/'+y
+#             image_path = temp_path
+#             temp_path = temp_path.split('/')
+#             temp_path = temp_path[-1].split('.j')
+#             img_id = temp_path[0]
+#             json_path = x_json + '/' + img_id + '.json'
+#             image = tf.io.decode_jpeg(tf.io.read_file(image_path))
+#             json_file = json.load(open(json_path))
+#             example = create_example(image, image_path, json_file)
+#             writer.write(example.SerializeToString())
+            
+
+x_img = PATH_MAIN + 'images'
+x_json = PATH_MAIN +'meta'
+
+tfrec_path = TFREC_PARENT_PATH + args.filename + '.tfrec'
+
+
+with tf.io.TFRecordWriter(tfrec_path) as writer:
+    for y in sorted(os.listdir(x_img)):
+        if y != '.ipynb_checkpoints':
             temp_path = x_img+'/'+y
             image_path = temp_path
             temp_path = temp_path.split('/')

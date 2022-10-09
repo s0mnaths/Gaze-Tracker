@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --time=0-01:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1        
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=32G
-#SBATCH --output=test1.out
+#SBATCH --output=mit-train.out
 
 #SBATCH --mail-user=somnathsharmaji05@gmail.com
 #SBATCH --mail-type=END
@@ -21,14 +21,22 @@ virtualenv ./env
 source ./env/bin/activate
 
 echo Installing TF!
-pip install --no-index comet-ml tensorflow numpy matplotlib pillow tqdm pandas
+pip install --no-index comet-ml tensorflow
 
-ls
-scp -r /home/s0mnaths/projects/def-skrishna/s0mnaths .
+pwd
+
+scp -r /home/s0mnaths/projects/def-skrishna/s0mnaths/model/ .
 echo copy done
 
+ls
+
 echo begin training
-cd $SLURM_TMPDIR/s0mnaths/model
-python main.py --gpus 1 --epochs 1
+cd $SLURM_TMPDIR/model
+
+python main2.py --epoch 50 --dataset_dir /home/s0mnaths/projects/def-skrishna/s0mnaths/datasets/google_split_tfrec/ --save_dir /home/s0mnaths/projects/def-skrishna/s0mnaths/checkpoints/new_mod/gs/newex50/ --version_description gsnewex50
+
+
+
+echo end training
 
 echo DONE
