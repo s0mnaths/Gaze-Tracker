@@ -8,7 +8,7 @@
 
 This year during the GSoC’22 I worked on the Gaze Track project from last year, which is based on the implementation, fine-tuning and experimentation of Google’s paper [Accelerating eye movement research via accurate and affordable smartphone eye tracking](https://www.nature.com/articles/s41467-020-18360-5).
 
-Eye tracking has a variety of uses, from enhancing accessibility for those with disabilities to improving driver safety. Modern, state-of-the-art mobile eye trackers, however, are expensive and tend to be bulky systems that need to be carefully set up and calibrated. The aim of this project therefore is to develop an affordable and open source alternative to these Eye Trackers.
+Eye tracking can be used for a range of purposes, from improving accessibility for people with disabilities to improving driver safety. However, modern state-of-the-art mobile eye trackers are costly, often bulky devices that require careful setup and calibration, and they tend to be expensive. The aim of this project therefore is to develop an affordable and open source alternative to these Eye Trackers.
 
 My main task during the GSoC period was the implement the model architecture proposed by Google, in Tensorflow, run SVR experiments, and compare the results to [Abhinav’s](https://abhinavvenkatadri.github.io/Eye-tracking-GSoC/) and [Dinesh’s](https://dssr2.github.io/gaze-track/) versions. Please refer to the the posts by them on their implementation.
 
@@ -17,13 +17,14 @@ My main task during the GSoC period was the implement the model architecture pro
 
 Every trained model offered in this project was developed using data from a portion of the enormous MIT GazeCapture dataset, which was made available in 2016. The dataset can be accessed by registering on the website. They include JSON files with the corresponding images that contain information such as bounding box coordinates for the eyes, faces, and other features, as well as data on the number of frames, face detections, and eye detections.
 
-Details of the file structure within the dataset and what information is contained are explained very well at the official [GazeCapture](https://github.com/CSAILVision/GazeCapture) repository.
+The official [GazeCapture](https://github.com/CSAILVision/GazeCapture) repository provides excellent explanations of the dataset's file structure and the information it contains.
+
 
 ## Splits
 
-The only frames that are included in the final dataset are those that have both valid face and eye detections. If any one of the detections is not present, the frame is discarded.
+Only those frames with valid face and eye detections are included in the final dataset. The frame is discarded if any one of the detections is absent.
 
-Hence our dataset is obtained after applying the following filters
+Therefore, after applying the following filters, our dataset is generated.
 
 1. Only Phone Data
 2. Only portrait orientation
@@ -48,9 +49,9 @@ The details regarding the split are as follows
 
 ### Google split
 
-Google split their dataset according to the unique ground truth points. This means that the train test and validation sets contain frames from every participant. However, frames related to a particular ground truth point do not exist in more than one set to prevent any data leakage. 
+The unique ground truth points were used by Google to split their dataset. This means that each participant's frames are included in the train test and validation sets.
 
-The split is also a random 70/10/15 train/val/test split with details as follows
+The details regarding the split are as follows
 
 | Train/Validation/Test | Number of Participants | Total Frames |
 | --- | --- | --- |
@@ -103,7 +104,7 @@ TF model checkpoints are available on the project repository.
 
 Here are some of the visualizations of gaze predictions from this years Tensorflow Implementation.
 
-The **‘+’ signs** are the ground truth gaze locations, **Dots** are network predictions and **Tri-Downs** are mean of network prediction for that particular ground truth gaze location. Each gaze location has multiple frames associated with it and hence has multiple predictions. To map predictions to their respective ground truth, we use color coding. All dots and tri-ups of a color correspond to the ‘+’ of the same color. The camera is at the origin(the star). 
+The **‘+’ signs** are the ground truth gaze locations, **Dots** are base model predictions and **Tri-Downs** are mean of base model predictions for that particular ground truth gaze location. Each gaze location has several frames connected to it, and as a result, has several predictions. We apply colour coding to correlate predictions to their corresponding ground truth. All dots and tri-ups of a color correspond to the ‘+’ of the same color. The __star(*)__ corresonds to the camera position, which is at the origin. 
 
 ### **MIT Split**
 
