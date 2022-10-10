@@ -158,7 +158,7 @@ We select 10 users based on the highest number of frames from each of the above 
 | Implementation | MED |
 | --- | --- |
 | Abhinav’s | 1.82cm |
-| New(TF) | 1.76cm |
+| New(TF) | 1.68cm |
 
 **Post-SVR Results:**
 
@@ -180,25 +180,45 @@ We select 10 users based on the highest number of frames from each of the above 
 <td>New(TF)</td><td>1.73cm</td><td>1.75cm</td><td>1.84cm</td><td>1.72cm</td></tr>
 </tbody></table>
 
+**Base Model MED vs Post SVR MED:**
+
+1. *Random Data points/samples (All Frames)*
+
+<table><thead><tr>
+<th>Version</th><th colspan=2>70 &amp; 30 split</th><th colspan=2>2/3 &amp; 1/3 split</th></tr>
+</thead><tbody><tr><td></td><td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td>
+<td>Shuffle = False</td></tr>
+  <tr><td>TF Base Model MED</td><td>1.79cm</td><td>1.88cm</td><td>1.79cm</td><td>1.86cm</td></tr>
+<tr><td>Post SVR MED</td><td>1.48cm</td><td>1.69cm</td><td>1.49cm</td><td>1.64cm</td></tr></tbody></table>
+
+2. *Unique Ground Truth values (30 points)*
+
+<table><thead><tr><th>Version</th><th colspan=2>70 &amp; 30 split</th>
+<th colspan=2>2/3 &amp; 1/3 split</th></tr></thead><tbody><tr><td></td>
+<td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td><td>Shuffle = False</td>
+</tr><tr><td>TF Base Model MED</td><td>1.78cm</td><td>1.75cm</td><td>1.83cm</td><td>2cm</td></tr><tr>
+<td>Post SVR MED</td><td>1.73cm</td><td>1.75cm</td><td>1.84cm</td><td>1.72cm</td></tr>
+</tbody></table>
+
 
 ### 2. Per-Individual Comparison:
 
 1. *Random Data points/samples (All Frames)*
 
 <table><thead><tr>
-<th>User ID</th><th>No. of frames</th><th>MED(Base model)</th><th colspan=2>SVR-3CV (70&amp;30)</th><th colspan=2>SVR-3CV (2/3&amp;1/3)</th>
+<th>User ID</th><th>No. of frames</th><th>Base Model MED(Mean across all versions)</th><th colspan=2>SVR-3CV (70&amp;30)</th><th colspan=2>SVR-3CV (2/3&amp;1/3)</th>
 </tr></thead><tbody><tr><td></td><td></td><td></td><td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td>
-<td>Shuffle = False</td></tr><tr><td>3183</td><td>874</td><td>1.51cm</td><td>1.34cm</td><td>1.42cm</td><td>1.35cm</td>
-<td>1.32cm</td></tr><tr><td>1877</td><td>860</td><td>2.37cm</td><td>1.28cm</td><td>1.13cm</td><td>1.32cm</td><td>1.09cm</td>
-</tr><tr><td>1326</td><td>784</td><td>1.66cm</td><td>1.31cm</td><td>1.47cm</td><td>1.29cm</td><td>1.44cm</td>
-</tr><tr><td>3140</td><td>783</td><td>1.68cm</td><td>1.54cm</td><td>1.44cm</td><td>1.56cm</td><td>1.45cm</td>
-</tr><tr><td>2091</td><td>788</td><td>1.84cm</td><td>1.80cm</td><td>1.98cm</td><td>1.81cm</td>
-<td>1.92cm</td></tr><tr><td>2301</td><td>864</td><td>1.95cm</td><td>1.36cm</td><td>1.75cm</td>
-<td>1.34cm</td><td>1.69cm</td></tr><tr><td>2240</td><td>801</td><td>1.43cm</td><td>1.24cm</td>
-<td>1.52cm</td><td>1.23cm</td><td>1.46cm</td></tr><tr><td>382</td><td>851</td><td>2.54cm</td>
+<td>Shuffle = False</td></tr><tr><td>3183</td><td>874</td><td>1.38cm</td><td>1.34cm</td><td>1.42cm</td><td>1.35cm</td>
+<td>1.32cm</td></tr><tr><td>1877</td><td>860</td><td>2.03cm</td><td>1.28cm</td><td>1.13cm</td><td>1.32cm</td><td>1.09cm</td>
+</tr><tr><td>1326</td><td>784</td><td>1.53cm</td><td>1.31cm</td><td>1.47cm</td><td>1.29cm</td><td>1.44cm</td>
+</tr><tr><td>3140</td><td>783</td><td>1.54cm</td><td>1.54cm</td><td>1.44cm</td><td>1.56cm</td><td>1.45cm</td>
+</tr><tr><td>2091</td><td>788</td><td>1.70cm</td><td>1.80cm</td><td>1.98cm</td><td>1.81cm</td>
+<td>1.92cm</td></tr><tr><td>2301</td><td>864</td><td>1.86cm</td><td>1.36cm</td><td>1.75cm</td>
+<td>1.34cm</td><td>1.69cm</td></tr><tr><td>2240</td><td>801</td><td>1.46cm</td><td>1.24cm</td>
+<td>1.52cm</td><td>1.23cm</td><td>1.46cm</td></tr><tr><td>382</td><td>851</td><td>2.38cm</td>
 <td>2.44cm</td><td>2.89cm</td><td>2.44cm</td><td>2.75cm</td></tr><tr><td>2833</td><td>796</td>
-<td>1.73cm</td><td>1.68cm</td><td>1.86cm</td><td>1.67cm</td><td>1.87cm</td></tr><tr><td>2078</td>
-<td>786</td><td>1.22cm</td><td>0.82cm</td><td>1.42cm</td><td>0.83cm</td><td>1.37cm</td></tr></tbody></table>
+<td>1.71cm</td><td>1.68cm</td><td>1.86cm</td><td>1.67cm</td><td>1.87cm</td></tr><tr><td>2078</td>
+<td>786</td><td>1.24cm</td><td>0.82cm</td><td>1.42cm</td><td>0.83cm</td><td>1.37cm</td></tr></tbody></table>
 
 
 2. *Unique Ground Truth values (30 points)*
@@ -228,29 +248,35 @@ We can see that the mean losses when considering all the frames are lower, compa
 | Implementation | MED |
 | --- | --- |
 | Abhinav’s | 1.15cm |
-| New(TF) | 1.32cm |
+| New(TF) | 1.24cm |
 
-**Post-SVR Results:**
+
+**Base Model MED vs Post SVR MED:**
 
 1. *Random Data points/samples (All Frames)*
 
-<table><thead><tr><th>Implementation</th><th colspan=2>70 &amp; 30 split</th><th colspan=2>2/3 &amp; 1/3 split</th></tr>
-</thead><tbody><tr><td></td><td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td><td>Shuffle = False</td>
-</tr><tr><td>New(TF)</td><td>1.04cm</td><td>1.14cm</td><td>1.12</td><td>1.04</td></tr></tbody></table>
+<table><thead><tr><th>Version</th><th colspan=2>70 &amp; 30 split</th>
+<th colspan=2>2/3 &amp; 1/3 split</th></tr></thead><tbody><tr><td></td>
+<td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td><td>Shuffle = False</td>
+</tr><tr><td>TF Base Model MED</td><td>1.31cm</td><td>1.31cm</td><td>1.32cm</td><td>1cm</td></tr><tr>
+<td>Post SVR MED</td><td>1.04cm</td><td>1.14cm</td><td>1.12cm</td><td>1.04cm</td></tr>
+</tbody></table>
 
 ### 2. Per-Individual Comparison:
 
-<table><thead><tr><th>User ID</th><th>No. of frames</th><th>MED(Base model)</th><th colspan=2>SVR-3CV (70&amp;30)</th><th colspan=2>SVR-3CV (2/3&amp;1/3)</th>
+<table><thead><tr><th>User ID</th><th>No. of frames</th><th>Base Model MED(Mean across all versions)</th><th colspan=2>SVR-3CV (70&amp;30)</th><th colspan=2>SVR-3CV (2/3&amp;1/3)</th>
 </tr></thead><tbody><tr><td></td><td></td><td></td><td>Shuffle = True</td><td>Shuffle = False</td><td>Shuffle = True</td>
-<td>Shuffle = False</td></tr><tr><td>503</td><td>965</td><td>1.51cm</td><td>1.37cm</td><td>1.35cm</td><td>1.32cm</td>
-<td>1.41cm</td></tr><tr><td>1866</td><td>1018</td><td>1.23cm</td><td>0.86cm</td><td>1.24cm</td><td>1.18cm</td><td>0.88cm</td>
-</tr><tr><td>2459</td><td>1006</td><td>1.34cm</td><td>0.69cm</td><td>0.81cm</td><td>0.81cm</td><td>0.68cm</td></tr><tr>
-<td>1816</td><td>989</td><td>1.09cm</td><td>0.92cm</td><td>0.93cm</td><td>0.92cm</td><td>0.94cm</td></tr><tr><td>3004</td>
-<td>983</td><td>1.41cm</td><td>1.18cm</td><td>1.07cm</td><td>1.05cm</td><td>1.16cm</td></tr><tr><td>3253</td><td>978</td><td>1.24cm</td>
-<td>0.84cm</td><td>1.07cm</td><td>0.98cm</td><td>0.84cm</td></tr><tr><td>1231</td><td>968</td><td>1.38cm</td><td>1.09cm</td><td>1.33cm</td>
-<td>1.36cm</td><td>1.06cm</td></tr><tr><td>2152</td><td>957</td><td>1.53cm</td><td>1.36cm</td><td>1.28cm</td><td>1.27cm</td><td>1.38cm</td>
+<td>Shuffle = False</td></tr><tr><td>503</td><td>965</td><td>1.38cm</td><td>1.37cm</td><td>1.35cm</td><td>1.32cm</td>
+<td>1.41cm</td></tr><tr><td>1866</td><td>1018</td><td>1.34cm</td><td>0.86cm</td><td>1.24cm</td><td>1.18cm</td><td>0.88cm</td>
+</tr><tr><td>2459</td><td>1006</td><td>1.48cm</td><td>0.69cm</td><td>0.81cm</td><td>0.81cm</td><td>0.68cm</td></tr><tr>
+<td>1816</td><td>989</td><td>1.04cm</td><td>0.92cm</td><td>0.93cm</td><td>0.92cm</td><td>0.94cm</td></tr><tr><td>3004</td>
+<td>983</td><td>1.22cm</td><td>1.18cm</td><td>1.07cm</td><td>1.05cm</td><td>1.16cm</td></tr><tr><td>3253</td><td>978</td><td>1.26cm</td>
+<td>0.84cm</td><td>1.07cm</td><td>0.98cm</td><td>0.84cm</td></tr><tr><td>1231</td><td>968</td><td>1.39cm</td><td>1.09cm</td><td>1.33cm</td>
+<td>1.36cm</td><td>1.06cm</td></tr><tr><td>2152</td><td>957</td><td>1.28cm</td><td>1.36cm</td><td>1.28cm</td><td>1.27cm</td><td>1.38cm</td>
 </tr><tr><td>2015</td><td>947</td><td>1.27cm</td><td>1.12cm</td><td>1.23cm</td><td>1.2cm</td><td>1.11cm</td></tr><tr><td>1046</td>
 <td>946</td><td>1.24cm</td><td>0.97cm</td><td>1.07cm</td><td>1.07cm</td><td>0.97cm</td></tr></tbody></table>
+
+
 
 
 ### Analysis
