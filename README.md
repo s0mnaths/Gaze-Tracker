@@ -118,7 +118,7 @@ The **‘+’ signs** are the ground truth gaze locations, **Dots** are base 
 
 The next task was to compare the SVR results with the current implementations. Google, in their pipeline extracts the output of shape (1,4) from the penultimate layer of the multilayer feed-forward convolutional neural network (CNN), and fits it at a per-user-level to build a high-accuracy personalized model. We follow the same.
 
-A hook is applied to the model for obtaining the output of the penultimate layer. Once the output of the penultimate layer is obtained (1,4) a multioutput regressor SVR is applied. This was fitted on the test set of the trained model.
+For the purpose of getting the output of the penultimate layer, a hook is attached to the model. A multioutput regressor SVR is used once the output of shape (x,4) from the penultimate layer has been obtained.  This was fitted on the test set of the trained model.
 
 For sweeping the parameters of SVR, we consider:
 
@@ -126,9 +126,9 @@ For sweeping the parameters of SVR, we consider:
 - C=20
 - gamma=0.6
 
-This is similar to what Google mentioned in their [supplementary](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-020-18360-5/MediaObjects/41467_2020_18360_MOESM1_ESM.pdf).
+This is similar to what Google stated in their [supplementary](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-020-18360-5/MediaObjects/41467_2020_18360_MOESM1_ESM.pdf) material.
 
-The Multioutput regressor’s epsilon value was sweeped between 0.01 and 1000 to find the optimum value. For fitting the SVR, the test set is split into into 70:30, and 2/3:1:3 ratio. We then consider *3 fold* and *5 fold* while doing the grid search. Using this the best parameter is obtained and this is used to fit the SVR.
+To select the best value, the epsilon value of the Multioutput Regressor was swept between 0.01 and 1000. For the purpose of fitting the SVR, the test set is divided into two ratios: 70:30 and 2/3:1/3. We then perform 3 fold and 5 fold grid search. Using this we obtain the best parameter for each individual, which is used to fit the SVR.
 
 ## Various Splits for SVR
 
@@ -261,23 +261,24 @@ Since the Google split has frames of each individual in both the sets, it result
 
 Data was collected using an Android App. The users' photo was clicked at random times while the circle/dots are appearing on the screen. The centre of the circle is noted as the X,y coordinate and frames were assigned to particular coordinate depending on the time stamp.
 
-## Challenges and Learning
+An Android app was used to collect the data. At random intervals while the circle/dots were visible on the screen, the users' photos were clicked. The centre of the circle is noted as the (x,y) coordinate of the gaze and frames were assigned to that particular coordinate depending on the time stamp.
+
+## New Learnings
 
 - Learning and implementing the network in Tensorflow
 - Getting accustomed to training a network on HPC clusters
-- Hyperparameter tuning and using model tracking apps like CometML
-- Visualizing the outputs and interpreting them.
-- Training on large datasets
+- Using Comet-ml for hyperparameter tuning and model version tracking
+- Visualizing the outputs and interpreting them
+- Loading and preprocessing on large datasets
 
 ## Future Scope and Improvements
 
-- Understanding if we are querying the Google model binary correctly
+- Understanding if we are querying the Google model binary correctly.
 - Understanding the SVR patterns in different model versions and find out how well our model is generalizing.
 - Training the model with normalization function used by Google.
 - Test the model on the phone data collected by our own app, and compare with Google's binary.
 - Comparing with different implementations such as iTracker to see whether the model can be further improved by extending the network.
-- Testing on only frames whose tilt / pan / roll is within ±10 degrees
-- While testing the google split some of those points are leaked, but so it is also common to the Google’s method. This has to be cleaned up in future work.
+- While fitting and testing the SVR on the Google split version, some of those points are leaked. This has to be cleaned up in future work.
 
 ## References
 
